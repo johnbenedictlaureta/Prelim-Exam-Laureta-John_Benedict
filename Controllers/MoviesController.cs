@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcMovie.Data;
 using MvcMovie.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MvcMovie.Controllers
 {
@@ -22,11 +21,9 @@ namespace MvcMovie.Controllers
         // GET: Movies
         public async Task<IActionResult> Index(string movieGenre, string searchString)
         {
-
             IQueryable<string> genreQuery = from m in _context.Movies
                                             orderby m.Genre
                                             select m.Genre;
-
 
             var movies = from m in _context.Movies
                          select m;
@@ -46,7 +43,6 @@ namespace MvcMovie.Controllers
                 Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
                 Movies = await movies.ToListAsync()
             };
-
 
             return View(movieGenreVM);
         }
@@ -76,6 +72,7 @@ namespace MvcMovie.Controllers
             return View(movie);
         }
 
+        #region Create
         // GET: Movies/Create
         public IActionResult Create()
         {
@@ -83,7 +80,7 @@ namespace MvcMovie.Controllers
         }
 
         // POST: Movies/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -98,9 +95,17 @@ namespace MvcMovie.Controllers
             return View(movie);
         }
 
+
+        #endregion
+
+        #region Edit
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+          
+            ViewData["Directors"] = CreateDirectorDropdown(); ;
+
+
             if (id == null)
             {
                 return NotFound();
@@ -114,13 +119,17 @@ namespace MvcMovie.Controllers
             return View(movie);
         }
 
+    
+
         // POST: Movies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,ReleaseDate,Genre,Price,Rating,DirectorID")] Movie movie)
         {
+
+           
             if (id != movie.ID)
             {
                 return NotFound();
@@ -146,8 +155,15 @@ namespace MvcMovie.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["Directors"] = CreateDirectorDropdown(); ;
+
             return View(movie);
         }
+
+
+        #endregion
+
 
         // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -173,7 +189,7 @@ namespace MvcMovie.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var movie = await _context.Movies.FindAsync(id);
-            _context.Movies .Remove(movie);
+            _context.Movies.Remove(movie);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -181,6 +197,18 @@ namespace MvcMovie.Controllers
         private bool MovieExists(int id)
         {
             return _context.Movies.Any(e => e.ID == id);
+        }
+
+
+        private SelectList CreateDirectorDropdown()
+        {
+            var directors = _context.Directors.AsNoTracking().ToArray();
+
+            var selectList = new SelectList(
+                directors.Select(i => new SelectListItem { Text = i.Name, Value = i.ID.ToString() }),
+                 "Value",
+                "Text");
+            return selectList;
         }
     }
 }

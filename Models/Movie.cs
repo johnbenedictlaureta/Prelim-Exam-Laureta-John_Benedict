@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -18,7 +19,6 @@ namespace MvcMovie.Models
         [DataType(DataType.Date)]
         public DateTime ReleaseDate { get; set; }
 
-        [RegularExpression(@"^[A-Z]+[a-zA-Z]*$")]
         [Required]
         [StringLength(30)]
         public string Genre { get; set; }
@@ -33,6 +33,7 @@ namespace MvcMovie.Models
         [Required]
         public string Rating { get; set; }
 
+        [DisplayName("Movie Director")]
         public int? DirectorID { get; set; }
         public Director Director { get; set; }
        

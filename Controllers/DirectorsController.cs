@@ -34,6 +34,7 @@ namespace MvcMovie.Controllers
             }
 
             var director = await _context.Directors
+                .Include(i => i.Movies)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (director == null)
             {
