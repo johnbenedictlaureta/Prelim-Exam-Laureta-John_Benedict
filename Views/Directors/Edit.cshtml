@@ -18,6 +18,15 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+
+            
+            <div class="form-group"> @*dropdown*@
+                <label class="control-label">Add Movies</label>
+                <select class="form-control" asp-items="@ViewBag.movies"
+                        id="movieSelect" name="movieSelect">
+                </select>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

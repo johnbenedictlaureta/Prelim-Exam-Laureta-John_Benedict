@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcMovie.Data;
@@ -102,7 +103,7 @@ namespace MvcMovie.Controllers
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-          
+
             ViewData["Directors"] = CreateDirectorDropdown(); ;
 
 
@@ -119,7 +120,7 @@ namespace MvcMovie.Controllers
             return View(movie);
         }
 
-    
+
 
         // POST: Movies/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -129,7 +130,7 @@ namespace MvcMovie.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("ID,Title,ReleaseDate,Genre,Price,Rating,DirectorID")] Movie movie)
         {
 
-           
+
             if (id != movie.ID)
             {
                 return NotFound();
@@ -139,8 +140,18 @@ namespace MvcMovie.Controllers
             {
                 try
                 {
+                    var newDirectorName = Request.Form["textbox"];
+                    if (!string.IsNullOrWhiteSpace(newDirectorName)) // Adding Director
+                    {
+                        Director director = new Director(newDirectorName);
+                        _context.Update(director);
+                        await _context.SaveChangesAsync();
+                        movie.DirectorID = director.ID;
+
+                    }
                     _context.Update(movie);
                     await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {

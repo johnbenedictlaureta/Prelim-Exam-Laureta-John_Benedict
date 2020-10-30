@@ -45,7 +45,7 @@ namespace MvcMovie.Controllers
         }
 
         // GET: Directors/Create
-       
+
         public IActionResult Create()
         {
             return View();
@@ -70,6 +70,7 @@ namespace MvcMovie.Controllers
         // GET: Directors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewData["movies"] = CreateMovieDropdown(); //Added Script
             if (id == null)
             {
                 return NotFound();
@@ -97,8 +98,13 @@ namespace MvcMovie.Controllers
 
             if (ModelState.IsValid)
             {
+                // Get the Director into the Movie Edit
                 try
                 {
+                    int movieId = int.Parse(Request.Form["movieSelect"]);
+                    var movie = await _context.Movies.FindAsync(movieId);
+                    movie.DirectorID = id;
+
                     _context.Update(director);
                     await _context.SaveChangesAsync();
                 }
@@ -115,6 +121,7 @@ namespace MvcMovie.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["movies"] = CreateMovieDropdown();
             return View(director);
         }
 
@@ -142,6 +149,15 @@ namespace MvcMovie.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var director = await _context.Directors.FindAsync(id);
+
+            // Get the list of Directors of the movie
+            var movie = await _context.Movies.Where(i => i.DirectorID == id).ToListAsync();
+            foreach (var mov in movie)
+            {
+                mov.DirectorID = null;
+
+            }
+
             _context.Directors.Remove(director);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -150,6 +166,49 @@ namespace MvcMovie.Controllers
         private bool DirectorExists(int id)
         {
             return _context.Directors.Any(e => e.ID == id);
+        }
+
+        private SelectList CreateMovieDropdown() // dropdown
+        {
+            var movies = _context.Movies.AsNoTracking().ToArray();
+
+            var selectList = new SelectList(
+                movies.Select(i => new SelectListItem { Text = i.Title, Value = i.ID.ToString() }),
+                 "Value",
+                "Text");
+            return selectList;
+        }
+
+        // Get into the Delete View of the movie on Directors
+        public async Task<IActionResult> removeMovDir(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            return View(movie);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> removeMovDir(int id) // Director's movie removal
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            movie.DirectorID = null;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

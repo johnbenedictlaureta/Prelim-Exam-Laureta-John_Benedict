@@ -1,11 +1,10 @@
 ﻿@model MvcMovie.Models.Movie
 
-@{
-    ViewData["Title"] = "Details";
-}
+@{ ViewData["Title"] = "removeMovDir"; }
 
-<h1>Details</h1>
+<h1>Delete</h1>
 
+<h3>Are you sure you want to remove this from the director?</h3>
 <div>
     <h4>Movie</h4>
     <hr />
@@ -41,8 +40,10 @@
             @Html.DisplayFor(model => model.Rating)
         </dd>
     </dl>
-</div>
-<div>
-    <a class="btn btn-small btn-success" asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
-    <a class="btn btn-small btn-secondary" asp-action="Index">Back to List</a>
+
+    <form asp-action="removeMovDir">
+        <input type="hidden" asp-for="ID" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
 </div>
