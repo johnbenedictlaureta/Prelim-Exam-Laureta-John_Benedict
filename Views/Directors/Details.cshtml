@@ -1,9 +1,14 @@
 ﻿@model MvcMovie.Models.Director
 
-@{
-    ViewData["Title"] = "Details";
-}
+@{ ViewData["Title"] = "Details"; }
+<style>
 
+    .row {
+        background-color: whitesmoke;
+        border-radius: 20px;
+        color: black;
+    }
+</style>
 <h1>Details</h1>
 
 <div>
@@ -22,25 +27,20 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                Title
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Movies)
         {
-            <tr>
-                <td>
-                    @item.Title
-                </td>
-                <td>
-                    <a class="btn btn-small btn-danger" asp-action="removeMovDir" asp-route-id="@item.ID">Delete</a> |
+<tr>
+    <td>
+        @item.Title
+    </td>
+    <td>
+        <a class="btn btn-small btn-danger" asp-action="removeMovDir" asp-route-id="@item.ID">Delete</a> |
 
-                </td>
-            </tr>
-        }
+    </td>
+</tr>}
     </tbody>
 </table>
 

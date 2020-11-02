@@ -1,9 +1,24 @@
 ﻿@model MovieGenreViewModel
 
-@{
-    ViewData["Title"] = "Index";
-}
+@{ ViewData["Title"] = "Index"; }
+<style>
+    .table {
+        background-color: whitesmoke;
+        border-radius: 20px;
+        color: black;
+    }
 
+    .mname {
+        background-image: url(/css/watching.png);
+        position: relative;
+        bottom: -25px;
+        left: -210px;
+        background-repeat: no-repeat;
+        width: 200px;
+        height: 200px;
+        background-size: 200px;
+    }
+</style>
 <h1>Movie List</h1>
 
 <p>
@@ -39,33 +54,36 @@
             <th></th>
         </tr>
     </thead>
+
     <tbody>
-@foreach (var item in Model.Movies) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Rating)
-            </td>
-            <td>
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <a class="btn btn-small btn-success" asp-action="Edit" asp-route-id="@item.ID">Edit</a> 
-                    <a class="btn btn-small btn-secondary" asp-action="Details" asp-route-id="@item.ID">Details</a> 
-                    <a class="btn btn-small btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                </div>
-              
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Movies)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Rating)
+                </td>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                        <a class="btn btn-small btn-success" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                        <a class="btn btn-small btn-secondary" asp-action="Details" asp-route-id="@item.ID">Details</a>
+                        <a class="btn btn-small btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<div class="mname">
+</div>

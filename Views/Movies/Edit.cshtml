@@ -1,9 +1,19 @@
 ﻿@model MvcMovie.Models.Movie
 
-@{
-    ViewData["Title"] = "Edit";
-}
+@{ ViewData["Title"] = "Edit"; }
+<style>
 
+    .row {
+        background-color: whitesmoke;
+        border-radius: 20px;
+        color: black;
+    }
+
+    .form-group {
+        position: relative;
+        left: 380px;
+    }
+</style>
 <h1>Edit</h1>
 
 <h4>Movie</h4>
@@ -55,6 +65,7 @@
 </div>
 
 <div>
+    <br />
     <a asp-action="Index">Back to List</a>
 </div>
 
